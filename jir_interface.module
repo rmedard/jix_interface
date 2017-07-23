@@ -8,6 +8,8 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Link;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
@@ -19,5 +21,23 @@ function jir_interface_node_insert(NodeInterface $node) {
     $node->setNewRevision(FALSE);
     $node->save();
     return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function jir_interface_entity_insert(EntityInterface $entity) {
+  if ($entity->bundle() == 'job'){
+    Drupal::cache('render')->deleteAll();
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function jir_interface_entity_update(EntityInterface $entity) {
+  if ($entity->bundle() == 'job'){
+    Drupal::cache('render')->deleteAll();
   }
 }
