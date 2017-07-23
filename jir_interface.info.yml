@@ -1,0 +1,7 @@
+name: JIR Interface Module
+type: module
+description: 'This JIR module handles all GUI manipulations.'
+package: JIR Custom Modules
+core: 8.x
+
+version: '8.x-1.0'

@@ -1,0 +1,23 @@
+<?php
+/**
+* @file
+* A description of what your module does.
+*/
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Link;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function jir_interface_node_insert(NodeInterface $node) {
+
+  if ($node->bundle() == 'employer') {
+    $actualLink = Link::createFromRoute(t('Post Job'), 'node.add', ['node_type' => 'job']);
+    $node->set("field_employer_post_job_link", $actualLink->getUrl()->toUriString() . "?edit[field_job_company_name]=" . $node->id());
+    $node->setNewRevision(FALSE);
+    $node->save();
+    return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
+  }
+}
