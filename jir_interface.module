@@ -1,9 +1,11 @@
 <?php
 /**
-* @file
-* A description of what your module does.
-*/
+ * @file
+ * A description of what your module does.
+ */
 
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Link;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,31 +15,81 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function jir_interface_node_insert(NodeInterface $node) {
-
-  if ($node->bundle() == 'employer') {
-    $actualLink = Link::createFromRoute(t('Post Job'), 'node.add', ['node_type' => 'job']);
-    $node->set("field_employer_post_job_link", $actualLink->getUrl()->toUriString() . "?edit[field_job_company_name]=" . $node->id());
-    $node->setNewRevision(FALSE);
-    $node->save();
-    return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
-  }
-}
+//function jir_interface_node_insert(NodeInterface $node)
+//{
+//
+//    if ($node->bundle() == 'employer') {
+//        $actualLink = Link::createFromRoute(t('Post Job'), 'node.add', ['node_type' => 'job']);
+//        $node->set("field_employer_post_job_link", $actualLink->getUrl()->toUriString() . "?edit[field_job_company_name]=" . $node->id());
+//        $node->setNewRevision(FALSE);
+//        try {
+//            $node->save();
+//            return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
+//        } catch (EntityStorageException $e) {
+//            Drupal::logger('jir_interface')->error(t('Saving employer id: @id failed', ['@id' => $node->id()]));
+//        }
+//    }
+//}
 
 /**
  * Implements hook_entity_insert().
  */
-function jir_interface_entity_insert(EntityInterface $entity) {
-  if ($entity->bundle() == 'job'){
-    Drupal::cache('render')->deleteAll();
-  }
+function jir_interface_entity_insert(EntityInterface $entity)
+{
+    if ($entity->bundle() == 'job') {
+        Drupal::cache('render')->deleteAll();
+    }
 }
 
 /**
  * Implements hook_entity_update().
  */
-function jir_interface_entity_update(EntityInterface $entity) {
-  if ($entity->bundle() == 'job'){
-    Drupal::cache('render')->deleteAll();
-  }
+function jir_interface_entity_update(EntityInterface $entity)
+{
+    if ($entity->bundle() == 'job') {
+        Drupal::cache('render')->deleteAll();
+    }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function jir_interface_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+    $form['site_owner'] = [
+        '#type' => 'textfield',
+        '#title' => t('Site owner'),
+        '#default_value' => Drupal::config('system.site')->get('owner'),
+    ];
+    $form['site_address_line_1'] = [
+        '#type' => 'textfield',
+        '#title' => t('Site address line 1'),
+        '#default_value' => Drupal::config('system.site')->get('address_line_1'),
+    ];
+    $form['site_address_line_2'] = [
+        '#type' => 'textfield',
+        '#title' => t('Site address line 2'),
+        '#default_value' => Drupal::config('system.site')->get('address_line_2'),
+    ];
+    $form['site_phone'] = [
+        '#type' => 'tel',
+        '#title' => t('Site phone'),
+        '#default_value' => Drupal::config('system.site')->get('phone'),
+    ];
+    $form['#submit'][] = 'jir_interface_site_information_phone_submit';
+}
+
+/**
+ * @param array $form
+ * @param FormStateInterface $formState
+ */
+function jir_interface_site_information_phone_submit(array &$form, FormStateInterface $formState)
+{
+    $config = Drupal::configFactory()->getEditable('system.site');
+    $config
+        ->set('owner', $formState->getValue('site_owner'))
+        ->set('address_line_1', $formState->getValue('site_address_line_1'))
+        ->set('address_line_2', $formState->getValue('site_address_line_2'))
+        ->set('phone', $formState->getValue('site_phone'))
+        ->save();
 }
