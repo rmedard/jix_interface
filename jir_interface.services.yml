@@ -1,0 +1,4 @@
+services:
+  jir_interface.statistics_service:
+    class: Drupal\jir_interface\Service\StatisticsService
+    arguments: ["@entity_type.manager"]
