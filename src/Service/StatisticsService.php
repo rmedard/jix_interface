@@ -6,7 +6,7 @@
  * Time: 21:10
  */
 
-namespace Drupal\jir_interfaceService;
+namespace Drupal\jir_interface\Service;
 
 
 use Drupal;
