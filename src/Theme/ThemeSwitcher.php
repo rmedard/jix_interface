@@ -48,10 +48,9 @@ class ThemeSwitcher implements ThemeNegotiatorInterface {
         if ($route !== NULL and $route instanceof Route) {
             \Drupal::logger('jix_interface')
               ->warning('Path: ' . $route->getPath());
-            if (preg_match('/manage/.*', $route->getPath())) {
+            if (preg_match('\/manage\/.*', $route->getPath())) {
                 return 'seven';
             }
-            return FALSE;
         }
         return FALSE;
     }
