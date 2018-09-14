@@ -6,4 +6,4 @@ services:
   theme.negotiator.theme_switcher:
     class: Drupal\jix_interface\Theme\ThemeSwitcher
     tags:
-      - { name: 'jix_theme_switcher', priority: 1000 }
+      - {name: 'theme_switcher', priority: 1000}
