@@ -25,6 +25,7 @@ class ThemeSwitcher implements ThemeNegotiatorInterface {
      *   negotiators decide.
      */
     public function applies(RouteMatchInterface $route_match) {
+        \Drupal::logger('jix_interface')->debug('Determining if or not...');
         return $this->negotiateRoute($route_match) ? TRUE : FALSE;
     }
 
