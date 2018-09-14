@@ -45,6 +45,7 @@ class ThemeSwitcher implements ThemeNegotiatorInterface {
 
     private function negotiateRoute(RouteMatchInterface $routeMatch) {
         $route = $routeMatch->getRouteObject();
+        \Drupal::logger('jix_interface')->warning('ThemeSwitcher launched!!');
         if ($route !== NULL and $route instanceof Route) {
             \Drupal::logger('jix_interface')
               ->warning('Path: ' . $route->getPath());
