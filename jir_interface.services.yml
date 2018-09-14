@@ -1,8 +1,0 @@
-services:
-  jir_interface.statistics_service:
-    class: Drupal\jir_interface\Service\StatisticsService
-    arguments: ["@entity_type.manager"]
-  jir_interface.theme_switcher:
-    class: Drupal\jir_interface\Theme\ThemeSwitcher
-    tags:
-      - { name: 'jix_theme_switcher', priority: 1000 }

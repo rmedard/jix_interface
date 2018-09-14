@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-//function jir_interface_node_insert(NodeInterface $node)
+//function jix_interface_node_insert(NodeInterface $node)
 //{
 //
 //    if ($node->bundle() == 'employer') {
@@ -26,7 +26,7 @@ use Drupal\Core\Entity\EntityInterface;
 //            $node->save();
 //            return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
 //        } catch (EntityStorageException $e) {
-//            Drupal::logger('jir_interface')->error(t('Saving employer id: @id failed', ['@id' => $node->id()]));
+//            Drupal::logger('jix_interface')->error(t('Saving employer id: @id failed', ['@id' => $node->id()]));
 //        }
 //    }
 //}
@@ -34,7 +34,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Implements hook_entity_insert().
  */
-function jir_interface_entity_insert(EntityInterface $entity)
+function jix_interface_entity_insert(EntityInterface $entity)
 {
     if ($entity->bundle() == 'job') {
         Drupal::cache('render')->deleteAll();
@@ -44,7 +44,7 @@ function jir_interface_entity_insert(EntityInterface $entity)
 /**
  * Implements hook_entity_update().
  */
-function jir_interface_entity_update(EntityInterface $entity)
+function jix_interface_entity_update(EntityInterface $entity)
 {
     if ($entity->bundle() == 'job') {
         Drupal::cache('render')->deleteAll();
@@ -54,7 +54,7 @@ function jir_interface_entity_update(EntityInterface $entity)
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function jir_interface_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id)
+function jix_interface_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id)
 {
     $form['site_owner'] = [
         '#type' => 'textfield',
@@ -76,14 +76,14 @@ function jir_interface_form_system_site_information_settings_alter(&$form, FormS
         '#title' => t('Site phone'),
         '#default_value' => Drupal::config('system.site')->get('phone'),
     ];
-    $form['#submit'][] = 'jir_interface_site_information_phone_submit';
+    $form['#submit'][] = 'jix_interface_site_information_phone_submit';
 }
 
 /**
  * @param array $form
  * @param FormStateInterface $formState
  */
-function jir_interface_site_information_phone_submit(array &$form, FormStateInterface $formState)
+function jix_interface_site_information_phone_submit(array &$form, FormStateInterface $formState)
 {
     $config = Drupal::configFactory()->getEditable('system.site');
     $config

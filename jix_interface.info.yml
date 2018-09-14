@@ -1,4 +1,4 @@
-name: JIR Interface Module
+name: JIX Interface Module
 type: module
 description: 'This JIR module handles all GUI manipulations.'
 package: JIR Custom Modules

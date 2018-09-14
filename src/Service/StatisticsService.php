@@ -6,7 +6,7 @@
  * Time: 21:10
  */
 
-namespace Drupal\jir_interface\Service;
+namespace Drupal\jix_interface\Service;
 
 
 use Drupal;
@@ -32,9 +32,9 @@ class StatisticsService
             $storage = $this->entityTypeManager->getStorage('node');
             return $storage->getQuery()->condition('type', $entityType)->count()->execute();
         } catch (InvalidPluginDefinitionException $e) {
-            Drupal::logger('jir_interface')->error('Invalid plugin: ' . $e->getMessage());
+            Drupal::logger('jix_interface')->error('Invalid plugin: ' . $e->getMessage());
         } catch (PluginNotFoundException $e) {
-            Drupal::logger('jir_interface')->error('Plugin not found: ' . $e->getMessage());
+            Drupal::logger('jix_interface')->error('Plugin not found: ' . $e->getMessage());
         }
         return 0;
     }

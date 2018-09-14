@@ -6,7 +6,7 @@
  * Time: 12:04
  */
 
-namespace Drupal\jir_interface\Theme;
+namespace Drupal\jix_interface\Theme;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
