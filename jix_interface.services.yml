@@ -3,7 +3,7 @@ services:
     class: Drupal\jix_interface\Service\StatisticsService
     arguments: ["@entity_type.manager"]
 
-  jix_interface.theme_switcher:
+  theme.negotiator.theme_switcher:
     class: Drupal\jix_interface\Theme\ThemeSwitcher
     tags:
       - { name: 'jix_theme_switcher', priority: 1000 }
