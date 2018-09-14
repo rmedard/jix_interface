@@ -2,6 +2,7 @@ services:
   jix_interface.statistics_service:
     class: Drupal\jix_interface\Service\StatisticsService
     arguments: ["@entity_type.manager"]
+
   jix_interface.theme_switcher:
     class: Drupal\jix_interface\Theme\ThemeSwitcher
     tags:
