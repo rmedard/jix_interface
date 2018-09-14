@@ -1,9 +1,9 @@
 services:
-  jix_interface.statistics_service:
-    class: Drupal\jix_interface\Service\StatisticsService
-    arguments: ["@entity_type.manager"]
-
   theme.negotiator.theme_switcher:
     class: Drupal\jix_interface\Theme\ThemeSwitcher
     tags:
-      - {name: 'theme_switcher', priority: 1000}
+    - {name: 'theme_switcher', priority: 1000}
+
+  jix_interface.statistics_service:
+    class: Drupal\jix_interface\Service\StatisticsService
+    arguments: ["@entity_type.manager"]
