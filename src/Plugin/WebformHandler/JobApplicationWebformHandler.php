@@ -34,6 +34,8 @@ class JobApplicationWebformHandler extends EmailWebformHandler
     public function sendMessage(WebformSubmissionInterface $webform_submission, array $message)
     {
         $job = $webform_submission->getElementData('job_application_job');
+        Drupal::logger('jix_interface')
+            ->info('Job: ' . $job);
         if (!is_null($job) and $job instanceof NodeInterface and $job->bundle() == 'job') {
             try {
                 $employer = $job->get('field_job_company_name')->first()->get('entity')->getTarget()->getValue();
