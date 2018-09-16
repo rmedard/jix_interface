@@ -71,7 +71,7 @@ function jix_interface_entity_update(EntityInterface $entity)
             $key = 'job_published';
             $to = $entity->get('field_job_contact_email')->value;
             $reply = Drupal::config('system.site')->get('mail');
-            $params['message'] = Markup::create(getEmailHtmlContent('advert_received', $entity));
+            $params['message'] = Markup::create(getEmailHtmlContent('job_published', $entity));
             $langcode = Drupal::currentUser()->getPreferredLangcode();
             $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
             if (intval($result['result']) !== 1) {
@@ -141,7 +141,8 @@ function jix_interface_site_information_phone_submit(array &$form, FormStateInte
         ->save();
 }
 
-function getEmailHtmlContent($email_type, NodeInterface $entity) {
+function getEmailHtmlContent($email_type, NodeInterface $entity)
+{
     $template_path = '';
     $variables = [];
     $twig_service = Drupal::service('twig');
@@ -151,8 +152,9 @@ function getEmailHtmlContent($email_type, NodeInterface $entity) {
                 'job' => $entity
             ];
             $template_path = '/templates/jix-job-published.html.twig';
+            break;
     }
 
-    return $twig_service->loadTemplate(drupal_get_path('module', 'jix_interface').$template_path)
+    return $twig_service->loadTemplate(drupal_get_path('module', 'jix_interface') . $template_path)
         ->render($variables);
 }
