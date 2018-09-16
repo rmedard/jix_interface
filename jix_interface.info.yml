@@ -5,3 +5,7 @@ package: JIR Custom Modules
 core: 8.x
 
 version: '8.x-1.0'
+
+dependencies:
+  -twig_tweak:twig_tweak
+  -jixmailer

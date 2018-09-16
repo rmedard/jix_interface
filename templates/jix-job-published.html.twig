@@ -1,0 +1,7 @@
+<div>
+    <p>Cher client,</p>
+    <p>Votre annonce d'emploi a été validée et publiée. Il est disponible ici: <a href="{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':job.id}) }}">{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':job.id}) }}</a><br> </p>
+
+
+    <p>{{ drupal_token('site:name') }} <br> {{ drupal_token('site:url') }} </p>
+</div>

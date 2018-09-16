@@ -6,6 +6,7 @@
 
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Link;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,9 +52,27 @@ function jix_interface_entity_update(EntityInterface $entity)
     if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
         if ($entity->isPublished() and !$entity->original->isPublished()) {
-            drupal_set_message('Job published', 'status');
-        } else {
-            drupal_set_message('Naaan', 'warning');
+            $mail_manager = Drupal::service('plugin.manager.mail');
+            $module = 'jixmailer';
+            $key = 'job_published';
+            $to = $entity->get('field_job_contact_email')->value;
+            $reply = Drupal::config('system.site')->get('mail');
+            $params['message'] = Markup::create(getEmailHtmlContent('advert_received', $entity));
+            $langcode = Drupal::currentUser()->getPreferredLangcode();
+            $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+            if (intval($result['result']) !== 1) {
+                $message = t('There was a problem sending notification email to @email for creating job id: @id.', [
+                    '@email' => $to,
+                    '@id' => $entity->id(),
+                ]);
+                Drupal::logger('jix_interface')->error($message);
+            } else {
+                $message = t('An email notification has been sent to @email for creating advert id: @id.', [
+                    '@email' => $to,
+                    '@id' => $entity->id(),
+                ]);
+                Drupal::logger('jix_interface')->notice($message);
+            }
         }
     }
 
@@ -108,3 +127,18 @@ function jix_interface_site_information_phone_submit(array &$form, FormStateInte
         ->save();
 }
 
+function getEmailHtmlContent($email_type, NodeInterface $entity) {
+    $template_path = '';
+    $variables = [];
+    $twig_service = Drupal::service('twig');
+    switch ($email_type) {
+        case 'job_published':
+            $variables = [
+                'job' => $entity
+            ];
+            $template_path = '/templates/jix-job-published.html.twig';
+    }
+
+    return $twig_service->loadTemplate(drupal_get_path('module', 'jix_interface').$template_path)
+        ->render($variables);
+}
