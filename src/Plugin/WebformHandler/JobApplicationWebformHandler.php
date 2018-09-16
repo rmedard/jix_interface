@@ -37,7 +37,7 @@ class JobApplicationWebformHandler extends EmailWebformHandler
         if (!is_null($job) and $job instanceof NodeInterface and $job->bundle() == 'job') {
             try {
                 $employer = $job->get('field_job_company_name')->first()->get('entity')->getTarget()->getValue();
-                MessengerInterface::addMessage('Send email to Jix and employer', MessengerInterface::TYPE_STATUS);
+                $this->messenger()->addStatus('Send email to Jix and employer');
             } catch (MissingDataException $e) {
                 Drupal::logger('jix_interface')
                     ->error(t('Missing Employer for job id: @jobId', ['@jobId' => $job->id()]));
@@ -45,9 +45,9 @@ class JobApplicationWebformHandler extends EmailWebformHandler
         } else {
             Drupal::logger('jix_interface')
                 ->info(t('Empty job, might be unsolicited application'));
-            MessengerInterface::addMessage('Send email to Jix only', MessengerInterface::TYPE_STATUS);
+            $this->messenger()->addStatus('Send email to Jix only');
         }
-        MessengerInterface::addMessage('Send handler called', MessengerInterface::TYPE_WARNING);
+        $this->messenger()->addWarning('Send handler called');
         return parent::sendMessage($webform_submission, $message);
     }
 }
