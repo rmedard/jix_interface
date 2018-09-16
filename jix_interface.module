@@ -35,6 +35,20 @@ use Drupal\Core\Messenger\MessengerTrait;
 //}
 
 /**
+ * Implements hook_theme().
+ */
+function jix_interface_theme($existing, $type, $theme, $path)
+{
+    return [
+        'jix_job_published' => [
+            'variables' => [
+                'job' => null,
+            ]
+        ]
+    ];
+}
+
+/**
  * Implements hook_entity_insert().
  */
 function jix_interface_entity_insert(EntityInterface $entity)
