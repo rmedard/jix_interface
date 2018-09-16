@@ -8,4 +8,4 @@ version: '8.x-1.0'
 
 dependencies:
   -twig_tweak:twig_tweak
-  -jixmailer
+  -jixmailer:jixmailer
