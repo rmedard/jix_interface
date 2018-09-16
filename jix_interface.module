@@ -49,6 +49,13 @@ function jix_interface_entity_update(EntityInterface $entity)
     if ($entity->bundle() == 'job') {
         Drupal::cache('render')->deleteAll();
     }
+
+    if ($entity->bundle() == 'employer' and $entity instanceof NodeInterface) {
+        if (!$entity->isPublished()) {
+            $jobsService = Drupal::service('jix_interface.jobs_storage_service');
+            $jobsService->unPublishJobsByEmployer($entity);
+        }
+    }
 }
 
 /**

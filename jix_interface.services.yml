@@ -7,3 +7,7 @@ services:
   jix_interface.statistics_service:
     class: Drupal\jix_interface\Service\StatisticsService
     arguments: ["@entity_type.manager"]
+
+  jix_interface.jobs_storage_service:
+    class: Drupal\jix_interface\Service\JobsStorageService
+    arguments: ["@entity_type.manager"]
