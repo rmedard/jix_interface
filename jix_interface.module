@@ -53,7 +53,7 @@ function jix_interface_entity_update(EntityInterface $entity)
         if ($entity->isPublished() and !$entity->original->isPublished()) {
             drupal_set_message('Job published', 'status');
         } else {
-            drupal_set_message('Job published', 'naaan');
+            drupal_set_message('Naaan', 'warning');
         }
     }
 
