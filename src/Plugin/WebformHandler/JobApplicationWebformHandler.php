@@ -10,9 +10,7 @@ namespace Drupal\jix_interface\Plugin\WebformHandler;
 
 
 use Drupal;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\TypedData\Exception\MissingDataException;
-use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 use Drupal\webform\Plugin\WebformHandler\EmailWebformHandler;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -31,25 +29,31 @@ use Drupal\webform\WebformSubmissionInterface;
 class JobApplicationWebformHandler extends EmailWebformHandler
 {
 
+    /**
+     * @param WebformSubmissionInterface $webform_submission
+     * @param array $message
+     */
     public function sendMessage(WebformSubmissionInterface $webform_submission, array $message)
     {
-        $job = $webform_submission->getElementData('job_application_job');
-        Drupal::logger('jix_interface')
-            ->info('Job: ' . $job);
-        if (!is_null($job) and $job instanceof NodeInterface and $job->bundle() == 'job') {
-            try {
-                $employer = $job->get('field_job_company_name')->first()->get('entity')->getTarget()->getValue();
-                $this->messenger()->addStatus('Send email to Jix and employer');
-            } catch (MissingDataException $e) {
-                Drupal::logger('jix_interface')
-                    ->error(t('Missing Employer for job id: @jobId', ['@jobId' => $job->id()]));
+        $jobId = $webform_submission->getElementData('job_application_job');
+        $firstName = $webform_submission->get('job_application_prenom')->getString();
+        $lastName = $webform_submission->get('job_application_nom')->getString();
+
+        $message['subject'] = t('New job application from: @firstName @lastName', ['@firstName' => $firstName, '@lastName' => $lastName]);
+        if (intval($jobId) > 0) {
+            $job = Node::load($jobId);
+            $applicationsEmail = $job->get('field_email_where_to_send_applic')->value;
+            $otherApplicationEmail = $job->get('field_additional_email_where_to')->value;
+
+            $message['to_mail'] = $applicationsEmail;
+            if (isset($otherApplicationEmail)) {
+                $message['cc_mail'] = $otherApplicationEmail;
             }
         } else {
-            Drupal::logger('jix_interface')
-                ->info(t('Empty job, might be unsolicited application'));
-            $this->messenger()->addStatus('Send email to Jix only');
+            $message['to_mail'] = Drupal::config('system.site')->get('mail');
         }
-        $this->messenger()->addWarning('Send handler called');
+        $this->messenger()->addStatus(t('Your job application has been sent successfully.'));
+        Drupal::logger('jix_interface')->info('Job application sent: ' . $webform_submission->id());
         return parent::sendMessage($webform_submission, $message);
     }
 }
