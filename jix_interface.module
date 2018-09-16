@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Drupal\Core\Entity\EntityInterface;
 
+use Drupal\Core\Messenger\MessengerTrait;
+
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
@@ -46,8 +48,13 @@ function jix_interface_entity_insert(EntityInterface $entity)
  */
 function jix_interface_entity_update(EntityInterface $entity)
 {
-    if ($entity->bundle() == 'job') {
+    if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
+        if ($entity->isPublished() and !$entity->original->isPublished()) {
+            drupal_set_message('Job published', 'status');
+        } else {
+            drupal_set_message('Job published', 'naaan');
+        }
     }
 
     if ($entity->bundle() == 'employer' and $entity instanceof NodeInterface) {
