@@ -44,6 +44,11 @@ function jix_interface_theme($existing, $type, $theme, $path)
             'variables' => [
                 'job' => null,
             ]
+        ],
+        'jix_job_created' => [
+          'variables' => [
+            'job' => NULL,
+          ]
         ]
     ];
 }
@@ -53,8 +58,30 @@ function jix_interface_theme($existing, $type, $theme, $path)
  */
 function jix_interface_entity_insert(EntityInterface $entity)
 {
-    if ($entity->bundle() == 'job') {
+    if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
+
+        $mail_manager = Drupal::service('plugin.manager.mail');
+        $module = 'jixmailer';
+        $key = 'job_created';
+        $to = Drupal::config('system.site')->get('mail');
+        $reply = Drupal::config('system.site')->get('mail');
+        $params['message'] = Markup::create(getEmailHtmlContent('job_created', $entity));
+        $langcode = Drupal::currentUser()->getPreferredLangcode();
+        $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+        if (intval($result['result']) !== 1) {
+            $message = t('There was a problem sending notification email to @email for creating job id: @id.', [
+              '@email' => $to,
+              '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->error($message);
+        } else {
+            $message = t('An email notification has been sent to @email for creating advert id: @id.', [
+              '@email' => $to,
+              '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->notice($message);
+        }
     }
 }
 
@@ -75,13 +102,13 @@ function jix_interface_entity_update(EntityInterface $entity)
             $langcode = Drupal::currentUser()->getPreferredLangcode();
             $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
             if (intval($result['result']) !== 1) {
-                $message = t('There was a problem sending notification email to @email for creating job id: @id.', [
+                $message = t('There was a problem sending notification email to @email for publishing job id: @id.', [
                     '@email' => $to,
                     '@id' => $entity->id(),
                 ]);
                 Drupal::logger('jix_interface')->error($message);
             } else {
-                $message = t('An email notification has been sent to @email for creating advert id: @id.', [
+                $message = t('An email notification has been sent to @email for publishing advert id: @id.', [
                     '@email' => $to,
                     '@id' => $entity->id(),
                 ]);
@@ -152,6 +179,12 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
                 'job' => $entity
             ];
             $template_path = '/templates/jix-job-published.html.twig';
+            break;
+        case 'job_created':
+            $variables = [
+              'job' => $entity
+            ];
+            $template_path = '/templates/jix-job-created.html.twig';
             break;
     }
 

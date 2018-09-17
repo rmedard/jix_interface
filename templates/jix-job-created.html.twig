@@ -1,0 +1,23 @@
+<div>
+    <p>Cher admin,</p>
+    <p>Une nouvelle annonce a été créée. Il est disponible ici: <a href="{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':job.id}) }}">{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':job.id}) }}</a><br> </p>
+
+    <h3>Détails de l'annonce</h3>
+
+    <label>Titre:</label> {{ job.title.value }} <br>
+    <label>Type posting:</label> {{ job.field_job_posting_plan.value }} <br>
+    <label>Catégorie:</label> {{ job.field_job_categorie.entity.name.value }} <br>
+
+    <strong>Détails de facturation</strong>
+    <label>Société:</label> {{ job.field_job_company_name.entity.name.value }} <br>
+    <label>Email de société:</label> {{ job.field_job_company_name.entity.field_employer_email.value }} <br>
+    <label>Nom de contact:</label> {{ job.field_contact_name.value }} <br>
+    <label>Téléphone de contact:</label> {{ job.field_job_contact_phone_number.value }} <br>
+    <label>Email de contact:</label> {{ job.field_job_contact_email.value }} <br>
+
+    <strong>Détails de securité</strong>
+    <label>Localisation d'utilisateur:</label> {{ job.field_job_poster_location.value }} <br>
+
+    <p>L'offre doit être validée avant d'appaître au public</p>
+
+</div>
