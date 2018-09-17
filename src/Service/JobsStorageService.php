@@ -55,4 +55,26 @@ class JobsStorageService
         }
     }
 
+    public function publishEmployerByJob(NodeInterface $job) {
+        try {
+            $storage = $this->entityTypeManager->getStorage('node');
+            $employer_id = $storage->getQuery()
+              ->condition('type', 'employer')
+              ->condition('status', Node::NOT_PUBLISHED)
+              ->condition('nid', $job->get('field_job_company_name.target_id')->value)
+              ->execute();
+            if (count($employer_id) == 1) {
+                $employer = Node::load($employer_id);
+                $employer->setPublished(true);
+                $employer->save();
+            }
+        } catch (InvalidPluginDefinitionException $e) {
+            Drupal::logger('jix_interface')->error('Invalid plugin: ' . $e->getMessage());
+        } catch (PluginNotFoundException $e) {
+            Drupal::logger('jix_interface')->error('Plugin not found: ' . $e->getMessage());
+        } catch (EntityStorageException $e) {
+            Drupal::logger('jix_interface')->error('Storage error: ' . $e->getMessage());
+        }
+    }
+
 }

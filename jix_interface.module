@@ -104,6 +104,8 @@ function jix_interface_entity_update(EntityInterface $entity)
     if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
         if ($entity->isPublished() and !$entity->original->isPublished()) {
+            $jobsService = Drupal::service('jix_interface.jobs_storage_service');
+            $jobsService->publishEmployerByJob($entity);
             send_job_published_notification($entity);
         }
     }
