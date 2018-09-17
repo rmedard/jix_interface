@@ -61,6 +61,10 @@ function jix_interface_entity_insert(EntityInterface $entity)
     if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
 
+        /**
+         * Send created notification
+         */
+
         $mail_manager = Drupal::service('plugin.manager.mail');
         $module = 'jixmailer';
         $key = 'job_created';
@@ -82,6 +86,13 @@ function jix_interface_entity_insert(EntityInterface $entity)
             ]);
             Drupal::logger('jix_interface')->notice($message);
         }
+
+        /**
+         * Send published notification
+         */
+        if ($entity->isPublished()) {
+            send_job_published_notification($entity);
+        }
     }
 }
 
@@ -93,27 +104,7 @@ function jix_interface_entity_update(EntityInterface $entity)
     if ($entity->bundle() == 'job' and $entity instanceof NodeInterface) {
         Drupal::cache('render')->deleteAll();
         if ($entity->isPublished() and !$entity->original->isPublished()) {
-            $mail_manager = Drupal::service('plugin.manager.mail');
-            $module = 'jixmailer';
-            $key = 'job_published';
-            $to = $entity->get('field_job_contact_email')->value;
-            $reply = Drupal::config('system.site')->get('mail');
-            $params['message'] = Markup::create(getEmailHtmlContent('job_published', $entity));
-            $langcode = Drupal::currentUser()->getPreferredLangcode();
-            $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
-            if (intval($result['result']) !== 1) {
-                $message = t('There was a problem sending notification email to @email for publishing job id: @id.', [
-                    '@email' => $to,
-                    '@id' => $entity->id(),
-                ]);
-                Drupal::logger('jix_interface')->error($message);
-            } else {
-                $message = t('An email notification has been sent to @email for publishing advert id: @id.', [
-                    '@email' => $to,
-                    '@id' => $entity->id(),
-                ]);
-                Drupal::logger('jix_interface')->notice($message);
-            }
+            send_job_published_notification($entity);
         }
     }
 
@@ -122,6 +113,30 @@ function jix_interface_entity_update(EntityInterface $entity)
             $jobsService = Drupal::service('jix_interface.jobs_storage_service');
             $jobsService->unPublishJobsByEmployer($entity);
         }
+    }
+}
+
+function send_job_published_notification(EntityInterface $entity) {
+    $mail_manager = Drupal::service('plugin.manager.mail');
+    $module = 'jixmailer';
+    $key = 'job_published';
+    $to = $entity->get('field_job_contact_email')->value;
+    $reply = Drupal::config('system.site')->get('mail');
+    $params['message'] = Markup::create(getEmailHtmlContent('job_published', $entity));
+    $langcode = Drupal::currentUser()->getPreferredLangcode();
+    $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+    if (intval($result['result']) !== 1) {
+        $message = t('There was a problem sending notification email to @email for publishing job id: @id.', [
+          '@email' => $to,
+          '@id' => $entity->id(),
+        ]);
+        Drupal::logger('jix_interface')->error($message);
+    } else {
+        $message = t('An email notification has been sent to @email for publishing advert id: @id.', [
+          '@email' => $to,
+          '@id' => $entity->id(),
+        ]);
+        Drupal::logger('jix_interface')->notice($message);
     }
 }
 
@@ -191,3 +206,4 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
     return $twig_service->loadTemplate(drupal_get_path('module', 'jix_interface') . $template_path)
         ->render($variables);
 }
+
