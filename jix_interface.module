@@ -44,7 +44,21 @@ function jix_interface_theme($existing, $type, $theme, $path)
             'variables' => [
                 'job' => null,
             ]
-        ]
+        ],
+        'jix_address' => [
+            'variables' => [
+                'title' => t('Get in touch'),
+                'address_line_1' => Drupal::config('system.site')->get('address_line_1'),
+                'address_line_2' => Drupal::config('system.site')->get('address_line_2'),
+                'owner' => Drupal::config('system.site')->get('owner'),
+                'phone' => Drupal::config('system.site')->get('phone'),
+            ]
+        ],
+        'jix_services' => [
+            'variables' => [
+                'title' => t('Our services'),
+            ]
+        ],
     ];
 }
 
@@ -151,7 +165,7 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
             $variables = [
                 'job' => $entity
             ];
-            $template_path = '/templates/jix-job-published.html.twig';
+            $template_path = '/templates/emails/jix-job-published.html.twig';
             break;
     }
 
