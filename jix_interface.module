@@ -49,6 +49,10 @@ function jix_interface_theme($existing, $type, $theme, $path)
           'variables' => [
             'job' => NULL,
           ]
+        ],
+        'jix_services' => [
+            'variables' => [
+            ]
         ]
     ];
 }
