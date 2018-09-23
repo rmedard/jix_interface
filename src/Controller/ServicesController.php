@@ -15,7 +15,7 @@ class ServicesController extends ControllerBase {
 
     public function content(){
         return[
-            '#theme' => 'pages/jix_services'
+            '#theme' => 'jix_our_services'
         ];
     }
 
