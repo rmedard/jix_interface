@@ -1,7 +1,7 @@
 jix_interface.content:
-  path: '/our-services'
+  path: '/manage'
   defaults:
-    _controller: '\Drupal\jix_interface\Controller\ServicesController::content'
+    _controller: '\Drupal\jix_interface\Controller\ManagerPageController::content'
     _title: 'Our services!'
   requirements:
     _permission: 'access content'

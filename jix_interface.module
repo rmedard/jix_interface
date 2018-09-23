@@ -50,9 +50,8 @@ function jix_interface_theme($existing, $type, $theme, $path)
                 'job' => NULL,
             ]
         ],
-        'jix_our_services' => [
+        'jix_manager' => [
             'variables' => [
-                'test_var' => NULL
             ]
         ]
     ];
