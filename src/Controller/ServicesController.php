@@ -14,9 +14,12 @@ use Drupal\Core\Controller\ControllerBase;
 class ServicesController extends ControllerBase {
 
     public function content(){
-        return[
-            '#theme' => 'pages/jix_our_services'
+
+        $renderable = [
+            '#theme' => 'pages/jix_our_services',
+            '#test_var' => 'test variable',
         ];
+        \Drupal::service('renderer')->render($renderable);
     }
 
 }
