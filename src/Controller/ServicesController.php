@@ -16,7 +16,7 @@ class ServicesController extends ControllerBase {
     public function content(){
 
         $renderable = [
-            '#theme' => 'pages/jix_our_services',
+            '#theme' => 'jix_our_services',
             '#test_var' => 'test variable',
         ];
         return $renderable;
