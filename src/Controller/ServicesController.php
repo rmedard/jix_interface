@@ -9,6 +9,7 @@
 namespace Drupal\jix_interface\Controller;
 
 
+use Drupal;
 use Drupal\Core\Controller\ControllerBase;
 
 class ServicesController extends ControllerBase {
@@ -19,7 +20,7 @@ class ServicesController extends ControllerBase {
             '#theme' => 'pages/jix_our_services',
             '#test_var' => 'test variable',
         ];
-        \Drupal::service('renderer')->render($renderable);
+        return Drupal::service('renderer')->render($renderable);
     }
 
 }
