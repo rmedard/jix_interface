@@ -48,13 +48,13 @@ function jix_interface_theme($existing, $type, $theme, $path)
         'jix_job_created' => [
             'variables' => [
                 'job' => NULL,
-            ],
-            'template' => 'jix-job-created'
+            ]
         ],
         'jix_our_services' => [
             'variables' => [
                 'test_var' => NULL
-            ]
+            ],
+            'template' => 'jix-our-services'
         ]
     ];
 }
