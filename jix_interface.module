@@ -53,8 +53,7 @@ function jix_interface_theme($existing, $type, $theme, $path)
         'jix_our_services' => [
             'variables' => [
                 'test_var' => NULL
-            ],
-            'template' => 'jix-our-services'
+            ]
         ]
     ];
 }
