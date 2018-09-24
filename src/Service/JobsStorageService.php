@@ -61,7 +61,7 @@ class JobsStorageService
             $employer_id = $storage->getQuery()
               ->condition('type', 'employer')
               ->condition('status', Node::NOT_PUBLISHED)
-              ->condition('nid', $job->get('field_job_company_name.entity.id')->value)
+              ->condition('nid', $job->get('field_job_company_name')->value)
               ->execute();
             if (count($employer_id) == 1) {
                 $employer = Node::load($employer_id);
