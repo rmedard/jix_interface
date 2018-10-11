@@ -71,13 +71,36 @@ function jix_interface_entity_insert(EntityInterface $entity)
 
         $mail_manager = Drupal::service('plugin.manager.mail');
         $module = 'jixmailer';
+        $reply = Drupal::config('system.site')->get('mail');
+        $langcode = Drupal::currentUser()->getPreferredLangcode();
+
+        //#################For Admin######################
         $key = 'job_created';
         $to = Drupal::config('system.site')->get('mail');
-        $reply = Drupal::config('system.site')->get('mail');
         $params['message'] = Markup::create(getEmailHtmlContent('job_created', $entity));
-        $langcode = Drupal::currentUser()->getPreferredLangcode();
         $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+
         if (intval($result['result']) !== 1) {
+            $message = t('There was a problem sending notification email to @email for creating job id: @id.', [
+                '@email' => $to,
+                '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->error($message);
+        } else {
+            $message = t('An email notification has been sent to @email for creating advert id: @id.', [
+                '@email' => $to,
+                '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->notice($message);
+        }
+
+        //######################For user#####################
+        $key = 'job_created_user';
+        $to = $entity->get('field_job_contact_email')->value;
+        $params['message'] = Markup::create(getEmailHtmlContent('job_created_user', $entity));
+        $result_user = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+
+        if (intval($result_user['result']) !== 1) {
             $message = t('There was a problem sending notification email to @email for creating job id: @id.', [
                 '@email' => $to,
                 '@id' => $entity->id(),
@@ -207,6 +230,12 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
                 'job' => $entity
             ];
             $template_path = '/templates/emails/jix-job-created.html.twig';
+            break;
+        case 'job_created_user':
+            $variables = [
+                'job' => $entity
+            ];
+            $template_path = '/templates/emails/jix-job-created-user.html.twig';
             break;
     }
 
