@@ -1,20 +1,20 @@
 <div>
-    <p>Cher utilisateur,</p>
+    <p>Cher {{ job.field_contact_name.value }},</p>
     <p>Votre annonce a été bien reçu.</p>
 
     <h3>Détails de l'annonce</h3>
 
-    <label>Titre:</label> {{ job.title.value }} <br>
-    <label>Type posting:</label> {{ job.field_job_posting_plan.value }} <br>
-    <label>Catégorie:</label> {{ job.field_job_categorie.entity.name.value }} <br>
+    <strong>Titre:</strong> {{ job.title.value }} <br>
+    <strong>Type posting:</strong> {{ job.field_job_posting_plan.value }} <br>
+    <strong>Catégorie:</strong> {{ job.field_job_categorie.entity.name.value }} <br>
 
     <h4>Détails de facturation</h4>
-    <label>Société:</label> {{ job.field_job_company_name.entity.title.value }} <br>
-    <label>Email de société:</label> {{ job.field_job_company_name.entity.field_employer_email.value }} <br>
-    <label>Nom de contact:</label> {{ job.field_contact_name.value }} <br>
-    <label>Téléphone de contact:</label> {{ job.field_job_contact_phone_number.value }} <br>
-    <label>Email de contact:</label> {{ job.field_job_contact_email.value }} <br>
+    <strong>Société:</strong> {{ job.field_job_company_name.entity.title.value }} <br>
+    <strong>Email de société:</strong> {{ job.field_job_company_name.entity.field_employer_email.value }} <br>
+    <strong>Nom de contact:</strong> {{ job.field_contact_name.value }} <br>
+    <strong>Téléphone de contact:</strong> {{ job.field_job_contact_phone_number.value }} <br>
+    <strong>Email de contact:</strong> {{ job.field_job_contact_email.value }} <br>
 
-    <p>L'offre doit être validée avant d'appaître au public</p>
+    <p><strong>L'offre doit être validée avant d'appaître au public</strong></p>
 
 </div>
