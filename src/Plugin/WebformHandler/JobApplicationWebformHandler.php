@@ -50,8 +50,12 @@ class JobApplicationWebformHandler extends EmailWebformHandler
             if (isset($otherApplicationEmail)) {
                 $message['cc_mail'] = $otherApplicationEmail;
             }
+            Drupal::logger('jix_interface')
+                ->info('Job application (Emails sent to): ' . $applicationsEmail . ', ' . Drupal::config('system.site')->get('mail'));
         } else {
             $message['to_mail'] = Drupal::config('system.site')->get('mail');
+            Drupal::logger('jix_interface')
+                ->info('Job application (Email sent to): ' . Drupal::config('system.site')->get('mail'));
         }
         $this->messenger()->addStatus(t('Your job application has been sent successfully.'));
         Drupal::logger('jix_interface')->info('Job application sent: ' . $webform_submission->id());
