@@ -16,25 +16,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
- */
-//function jix_interface_node_insert(NodeInterface $node)
-//{
-//
-//    if ($node->bundle() == 'employer') {
-//        $actualLink = Link::createFromRoute(t('Post Job'), 'node.add', ['node_type' => 'job']);
-//        $node->set("field_employer_post_job_link", $actualLink->getUrl()->toUriString() . "?edit[field_job_company_name]=" . $node->id());
-//        $node->setNewRevision(FALSE);
-//        try {
-//            $node->save();
-//            return new RedirectResponse("/node/add/job?edit[field_job_company_name]=" . $node->id()); //Not working
-//        } catch (EntityStorageException $e) {
-//            Drupal::logger('jix_interface')->error(t('Saving employer id: @id failed', ['@id' => $node->id()]));
-//        }
-//    }
-//}
-
-/**
  * Implements hook_theme().
  */
 function jix_interface_theme($existing, $type, $theme, $path)
