@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\node\NodeInterface;
+use Drupal\smart_ip\SmartIpLocation;
 
 /**
  * Implements hook_theme().
@@ -127,6 +128,24 @@ function jix_interface_entity_insert(EntityInterface $entity)
             Drupal::logger('jix_interface')->notice($message);
         }
     }
+}
+
+/**
+ * Implements hook_entity_create().
+ */
+function jix_interface_entity_create(EntityInterface $entity)
+{
+    if ($entity instanceof NodeInterface) {
+        $loc = new SmartIpLocation();
+        $location = $loc->get('city') . ', ' . $loc->get('country') . '(' . $loc->get('countryCode') . ')';
+        if ($entity->bundle() == 'employer') {
+            $entity->set('field_creator_location', $location);
+        }
+        if ($entity->bundle() == 'job') {
+            $entity->set('field_job_poster_location', $location);
+        }
+    }
+
 }
 
 /**
