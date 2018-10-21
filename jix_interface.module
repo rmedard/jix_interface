@@ -49,6 +49,11 @@ function jix_interface_theme($existing, $type, $theme, $path)
           'variables' => [
             'job' => NULL,
           ]
+        ],
+        'jix_employer_created' => [
+            'variables' => [
+                'employer' => NULL,
+            ]
         ]
     ];
 }
@@ -92,6 +97,32 @@ function jix_interface_entity_insert(EntityInterface $entity)
          */
         if ($entity->isPublished()) {
             send_job_published_notification($entity);
+        }
+    } elseif ($entity->bundle() == 'employer' and $entity instanceof NodeInterface) {
+        /**
+         * Send created notification
+         */
+
+        $mail_manager = Drupal::service('plugin.manager.mail');
+        $module = 'jixmailer';
+        $key = 'employer_created';
+        $to = Drupal::config('system.site')->get('mail');
+        $reply = Drupal::config('system.site')->get('mail');
+        $params['message'] = Markup::create(getEmailHtmlContent('employer_created', $entity));
+        $langcode = Drupal::currentUser()->getPreferredLangcode();
+        $result = $mail_manager->mail($module, $key, $to, $langcode, $params, $reply, true);
+        if (intval($result['result']) !== 1) {
+            $message = t('There was a problem sending notification email to @email for creating employer id: @id.', [
+                '@email' => $to,
+                '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->error($message);
+        } else {
+            $message = t('An email notification has been sent to @email for creating employer id: @id.', [
+                '@email' => $to,
+                '@id' => $entity->id(),
+            ]);
+            Drupal::logger('jix_interface')->notice($message);
         }
     }
 }
@@ -202,6 +233,12 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
               'job' => $entity
             ];
             $template_path = '/templates/jix-job-created.html.twig';
+            break;
+        case 'employer_created':
+            $variables = [
+                'employer' => $entity
+            ];
+            $template_path = '/templates/jix-employer-created.html.twig';
             break;
     }
 

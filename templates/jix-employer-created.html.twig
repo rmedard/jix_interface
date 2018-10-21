@@ -1,0 +1,17 @@
+<div>
+    <p>Cher admin,</p>
+    <p>Un nouvel employeur a été créé. Il est disponible ici:
+        <a href="{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':employer.id}) }}">{{ drupal_token('site:url') ~ path('entity.node.canonical', {'node':employer.id}) }}</a></p>
+
+    <h3>Détails de l'employeur</h3>
+
+    <label>Société:</label> {{ employer.title.value }} <br>
+    <label>Email:</label> {{ employer.field_employer_email.value }} <br>
+    <label>Téléphone:</label> {{ employer.field_employer_telephone.value }} <br>
+
+    <h4>Détails de securité</h4>
+    <label>Localisation d'utilisateur:</label> {{ employeur.field_creator_location.value }} <br>
+
+    <p>L'employeur doit être validé avant d'appaître au public</p>
+
+</div>
