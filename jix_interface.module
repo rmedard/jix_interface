@@ -253,7 +253,7 @@ function getEmailHtmlContent($email_type, NodeInterface $entity)
             $variables = [
                 'employer' => $entity
             ];
-            $template_path = '/templates/jix-employer-created.html.twig';
+            $template_path = '/templates/emails/jix-employer-created.html.twig';
             break;
     }
 
