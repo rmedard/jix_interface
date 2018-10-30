@@ -2,6 +2,6 @@ jix_interface.content:
   path: '/admin/manage'
   defaults:
     _controller: '\Drupal\jix_interface\Controller\ManagerPageController::content'
-    _title: 'Our services!'
+    _title: 'Panneau de gestion'
   requirements:
     _role: 'administrator + operateur'
