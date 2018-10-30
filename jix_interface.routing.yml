@@ -1,5 +1,5 @@
 jix_interface.content:
-  path: '/manage'
+  path: '/admin/manage'
   defaults:
     _controller: '\Drupal\jix_interface\Controller\ManagerPageController::content'
     _title: 'Our services!'
