@@ -48,7 +48,7 @@ class JobApplicationWebformHandler extends EmailWebformHandler
 //        $params['files'][] = $file_two;
 
         $cvFile = $webform_submission->getElementData('job_application_cv_file');
-        Drupal::logger('jix_mailer')->info('Wubmitted CV: ' . print_r($cvFile));
+        Drupal::logger('jix_mailer')->info('Wubmitted CV: ' . $cvFile);
 
         $message['subject'] = t('New job application from: @firstName @lastName', ['@firstName' => $firstName, '@lastName' => $lastName]);
         if (intval($jobId) > 0) {
