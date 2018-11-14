@@ -10,6 +10,7 @@ namespace Drupal\jix_interface\Plugin\WebformHandler;
 
 
 use Drupal;
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\webform\Plugin\WebformHandler\EmailWebformHandler;
 use Drupal\webform\WebformSubmissionInterface;
@@ -46,9 +47,27 @@ class JobApplicationWebformHandler extends EmailWebformHandler
 //        ]);
 
 //        $params['files'][] = $file_two;
-
-        $cvFile = $webform_submission->getElementData('job_application_cv_file');
-        Drupal::logger('jix_mailer')->info('Wubmitted CV: ' . $cvFile);
+        $cvFileId = $webform_submission->getElementData('job_application_cv_file');
+        if (intval($cvFileId) > 0) {
+//            try {
+//                $file_storage = Drupal::entityTypeManager()->getStorage('file');
+//                $cvFile = $file_storage->load($cvFileId);
+//                $cvFile->getFileUri();
+            $cvFileObject = File::load($cvFileId);
+            Drupal::logger('jix_mailer')
+                ->info(t('Wubmitted CV: fileUri => @uri, fileName => @name, mime => @mime',
+                        array(
+                            '@uri' => $cvFileObject->getFileUri(),
+                            '@name' => $cvFileObject->getFilename(),
+                            '@mime' => $cvFileObject->getMimeType())
+                    )
+                );
+//            } catch (InvalidPluginDefinitionException $e) {
+//                Drupal::logger('jix_interface')->error('Error retrieving file: ' . $e);
+//            } catch (PluginNotFoundException $e) {
+//                Drupal::logger('jix_interface')->error('Error retrieving file: ' . $e);
+//            }
+        }
 
         $message['subject'] = t('New job application from: @firstName @lastName', ['@firstName' => $firstName, '@lastName' => $lastName]);
         if (intval($jobId) > 0) {
