@@ -40,19 +40,19 @@ class JobApplicationWebformHandler extends EmailWebformHandler
         $firstName = $webform_submission->getElementData('job_application_prenom');
         $lastName = $webform_submission->getElementData('job_application_nom');
 
-        $cvFileId = $webform_submission->getElementData('job_application_cv_file');
-        if (intval($cvFileId) > 0) {
-            $cvFileObject = File::load($cvFileId);
-            $message['attachments'][] = $cvFileObject;
-            Drupal::logger('jix_mailer')
-                ->info(t('Submitted CV: fileUri => @uri, fileName => @name, mime => @mime',
-                        array(
-                            '@uri' => $cvFileObject->getFileUri(),
-                            '@name' => $cvFileObject->getFilename(),
-                            '@mime' => $cvFileObject->getMimeType())
-                    )
-                );
-        }
+//        $cvFileId = $webform_submission->getElementData('job_application_cv_file');
+//        if (intval($cvFileId) > 0) {
+//            $cvFileObject = File::load($cvFileId);
+//            $message['attachments'][] = $cvFileObject;
+//            Drupal::logger('jix_mailer')
+//                ->info(t('Submitted CV: fileUri => @uri, fileName => @name, mime => @mime',
+//                        array(
+//                            '@uri' => $cvFileObject->getFileUri(),
+//                            '@name' => $cvFileObject->getFilename(),
+//                            '@mime' => $cvFileObject->getMimeType())
+//                    )
+//                );
+//        }
 
         $message['subject'] = t('New job application from: @firstName @lastName', ['@firstName' => $firstName, '@lastName' => $lastName]);
         if (intval($jobId) > 0) {
