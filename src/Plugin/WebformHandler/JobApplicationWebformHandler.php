@@ -40,33 +40,18 @@ class JobApplicationWebformHandler extends EmailWebformHandler
         $firstName = $webform_submission->getElementData('job_application_prenom');
         $lastName = $webform_submission->getElementData('job_application_nom');
 
-//        $file_two = File::create([
-//            'uri' => $file_attachment,
-//            'filename' => 'object-oriented-php-for-drupal-developers.pdf',
-//            'filemime' => 'application/pdf',
-//        ]);
-
-//        $params['files'][] = $file_two;
         $cvFileId = $webform_submission->getElementData('job_application_cv_file');
         if (intval($cvFileId) > 0) {
-//            try {
-//                $file_storage = Drupal::entityTypeManager()->getStorage('file');
-//                $cvFile = $file_storage->load($cvFileId);
-//                $cvFile->getFileUri();
             $cvFileObject = File::load($cvFileId);
+            $message['attachments'][] = $cvFileObject;
             Drupal::logger('jix_mailer')
-                ->info(t('Wubmitted CV: fileUri => @uri, fileName => @name, mime => @mime',
+                ->info(t('Submitted CV: fileUri => @uri, fileName => @name, mime => @mime',
                         array(
                             '@uri' => $cvFileObject->getFileUri(),
                             '@name' => $cvFileObject->getFilename(),
                             '@mime' => $cvFileObject->getMimeType())
                     )
                 );
-//            } catch (InvalidPluginDefinitionException $e) {
-//                Drupal::logger('jix_interface')->error('Error retrieving file: ' . $e);
-//            } catch (PluginNotFoundException $e) {
-//                Drupal::logger('jix_interface')->error('Error retrieving file: ' . $e);
-//            }
         }
 
         $message['subject'] = t('New job application from: @firstName @lastName', ['@firstName' => $firstName, '@lastName' => $lastName]);
