@@ -61,7 +61,6 @@ class JobApplicationWebformHandler extends EmailWebformHandler
             $otherApplicationEmail = $job->get('field_additional_email_where_to')->value;
 
             $message['to_mail'] = $applicationsEmail . ', ' . Drupal::config('system.site')->get('mail');
-//            $message['to_mail'] = Drupal::config('system.site')->get('mail');
             if (isset($otherApplicationEmail)) {
                 $message['cc_mail'] = $otherApplicationEmail;
             }
