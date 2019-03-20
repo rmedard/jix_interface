@@ -39,24 +39,6 @@ function jix_interface_theme($existing, $type, $theme, $path)
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create().
- * Entity type: job
- */
-function jix_interface_job_create(EntityInterface $entity) {
-    Drupal::logger('Jix Interface')->info('I am in...');
-    if ($entity instanceof NodeInterface) {
-        $queryString = Drupal::request()->getQueryString();
-        $params = explode('&', $queryString);
-        foreach ($params as $param) {
-            $assocParam = explode('=', $param);
-            if ($assocParam[0] == 'posting_plan') {
-                $entity->set('field_job_posting_plan', $assocParam[1]);
-            }
-        }
-    }
-}
-
-/**
  * Implements hook_entity_insert().
  */
 function jix_interface_entity_insert(EntityInterface $entity)
@@ -161,6 +143,16 @@ function jix_interface_entity_create(EntityInterface $entity)
         }
         if ($entity->bundle() == 'job') {
             $entity->set('field_job_poster_location', $location);
+
+            // Set posting plan
+            $queryString = Drupal::request()->getQueryString();
+            $params = explode('&', $queryString);
+            foreach ($params as $param) {
+                $assocParam = explode('=', $param);
+                if ($assocParam[0] == 'posting_plan') {
+                    $entity->set('field_job_posting_plan', $assocParam[1]);
+                }
+            }
         }
     }
 
