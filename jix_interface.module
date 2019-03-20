@@ -43,6 +43,7 @@ function jix_interface_theme($existing, $type, $theme, $path)
  * Entity type: job
  */
 function jix_interface_job_create(EntityInterface $entity) {
+    Drupal::logger('Jix Interface')->info('I am in...');
     if ($entity instanceof NodeInterface) {
         $queryString = Drupal::request()->getQueryString();
         $params = explode('&', $queryString);
