@@ -93,6 +93,8 @@ class JobsStorageService
                     Drupal::logger('jix_interface')
                         ->notice(t('Job ID: @job_id unpublished after expiration.', ['@job_id' => $job->id()]));
                 }
+            } else {
+                Drupal::logger('jix_interface')->notice(t('No expired jobs to unPublish'));
             }
         } catch (InvalidPluginDefinitionException $e) {
             Drupal::logger('jix_interface')->error('Invalid plugin: ' . $e->getMessage());
