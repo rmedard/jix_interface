@@ -238,6 +238,16 @@ function jix_interface_site_information_phone_submit(array &$form, FormStateInte
         ->save();
 }
 
+/**
+ * Implements hook_cron().
+ */
+function jix_interface_cron()
+{
+    // UnPublish expired jobs
+    $jobsService = Drupal::service('jix_interface.jobs_storage_service');
+    $jobsService->unPublishExpiredJobs();
+}
+
 function getEmailHtmlContent($email_type, NodeInterface $entity)
 {
     $template_path = '';

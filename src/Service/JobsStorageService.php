@@ -12,6 +12,7 @@ namespace Drupal\jix_interface\Service;
 use Drupal;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\node\Entity\Node;
@@ -74,6 +75,29 @@ class JobsStorageService
             Drupal::logger('jix_interface')->error('Plugin not found: ' . $e->getMessage());
         } catch (EntityStorageException $e) {
             Drupal::logger('jix_interface')->error('Storage error: ' . $e->getMessage());
+        }
+    }
+
+    public function unPublishExpiredJobs() {
+        try {
+            $storage = $this->entityTypeManager->getStorage('node');
+            $expiredJobsIds = $storage->getQuery()
+                ->condition('type', 'job')
+                ->condition('status', Node::PUBLISHED)
+                ->condition('field_job_appl_deadline', new DrupalDateTime(), '<')
+                ->execute();
+            if (isset($expiredJobsIds) && count($expiredJobsIds) > 0) {
+                foreach ($storage->loadMultiple($expiredJobsIds) as $job){
+                    $job->setPublished(FALSE);
+                    $job->save();
+                    Drupal::logger('jix_interface')
+                        ->notice(t('Job ID: @job_id unpublished after expiration.', ['@job_id' => $job->id()]));
+                }
+            }
+        } catch (InvalidPluginDefinitionException $e) {
+            Drupal::logger('jix_interface')->error('Invalid plugin: ' . $e->getMessage());
+        } catch (PluginNotFoundException $e) {
+            Drupal::logger('jix_interface')->error('Plugin not found: ' . $e->getMessage());
         }
     }
 
