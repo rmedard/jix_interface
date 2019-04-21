@@ -100,6 +100,8 @@ class JobsStorageService
             Drupal::logger('jix_interface')->error('Invalid plugin: ' . $e->getMessage());
         } catch (PluginNotFoundException $e) {
             Drupal::logger('jix_interface')->error('Plugin not found: ' . $e->getMessage());
+        } catch (EntityStorageException $e) {
+            Drupal::logger('jix_interface')->error('Storage error: ' . $e->getMessage());
         }
     }
 
