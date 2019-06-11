@@ -1,7 +1,7 @@
 name: JIX Interface Module
 type: module
 description: 'This JIR module handles all GUI manipulations.'
-package: JIR Custom Modules
+package: JIX Custom Modules
 core: 8.x
 
 version: '8.x-1.0'
